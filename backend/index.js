@@ -13,7 +13,7 @@ connectToDB();
 
 app.use(express.json())
 app.use(cors({
-  origin: ["http://localhost:3000","http://localhost:3001"],
+  origin: ["https://ai-proctoring-six.vercel.app"],
   exposedHeaders: ["x-auth-token"]
 }))
 app.use("/auth", authRoutes);
