@@ -111,7 +111,7 @@ const QuestionPaper = ({ user }) => {
 
       for (const key in correctAnswers) {
         const correct = correctAnswers[key];
-        const attempt = attemptAnswers[key];  
+        const attempt = attemptAnswers[key];
 
         total++;
         if (attempt !== null && attempt !== undefined) {
@@ -121,8 +121,10 @@ const QuestionPaper = ({ user }) => {
       }
     }
 
-    const accuracy = attemptedCount ? Math.round((correctCount / attemptedCount) * 100) : 0
-    const score = total ? Math.round((correctCount / total) * 100) : 0
+    const accuracy = attemptedCount
+      ? Math.round((correctCount / attemptedCount) * 100)
+      : 0;
+    const score = total ? Math.round((correctCount / total) * 100) : 0;
     setTotalAccuracy(accuracy);
     setTotalScore(score);
   };
@@ -145,7 +147,7 @@ const QuestionPaper = ({ user }) => {
     intervalRef.current = null;
     timeLeftRef.current = 0;
     localStorage.removeItem("ongoing");
-    stopCameraAndProctoring()
+    stopCameraAndProctoring();
   };
 
   async function startProctoring(stopExam) {
@@ -228,10 +230,10 @@ const QuestionPaper = ({ user }) => {
 
   const handleBeforeUnload = () => {
     if (!submittedRef.current && timeLeftRef.current > 0) storeInLocalStorage();
+    stopCameraAndProctoring()
   };
 
   const handleBeforeUnmount = () => {
-    
     if (!submittedRef.current && timeLeftRef.current > 0) storeInLocalStorage();
   };
 
@@ -256,139 +258,133 @@ const QuestionPaper = ({ user }) => {
     return () => {
       handleBeforeUnmount();
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      stopCameraAndProctoring()
+      stopCameraAndProctoring();
     };
   }, []);
 
   if (!exam) return;
 
   return (
-    <div className="question-paper-container">
-      <header className="test-header">
-        <div className="flex justify-between">
-          <h1>{exam.title}</h1>
-          {intervalRef.current && (
-            <img
-              onClick={() => {
-                const confirm = window.confirm(
-                  "Are you sure you want to stop the exam?"
-                );
-                if (confirm) {
-                  stopExam();
-                  navigate("/exams");
-                }
-              }}
-              className="h-9 cursor-pointer"
-              src="/stop.png"
-              alt="Stop"
-            />
-          )}
-        </div>
-        <div className="test-meta">
-          <span>
-            Time: {formatTime(timeLeft)} / {formatTime(exam.duration * 60)}
-          </span>
-          <span>Task: {questions.length}</span>
-        </div>
-      </header>
-
-      {!submitted ? (
-        <div className="question-section">
-          <div className="question-progress">
-            Question {currentQuestion + 1} of {questions.length}
-          </div>
-          <div className="question-text">{questions[currentQuestion].text}</div>
-          <div className="options-container">
-            {questions[currentQuestion].options.map((option, index) => (
-              <div
-                key={index}
-                className={`option ${
-                  selectedAnswers[questions[currentQuestion]._id] ===
-                  questions[currentQuestion].options.indexOf(option)
-                    ? "selected"
-                    : ""
-                }`}
-                onClick={() =>
-                  handleAnswerSelect(
-                    questions[currentQuestion]._id,
-                    questions[currentQuestion].options.indexOf(option)
-                  )
-                }
-              >
-                {option}
-              </div>
-            ))}
-          </div>
-          <div className="navigation-buttons">
-            <button
-              onClick={handlePrevQuestion}
-              disabled={currentQuestion === 0}
-            >
-              Previous
-            </button>
-            {currentQuestion < questions.length - 1 ? (
-              <button onClick={handleNextQuestion}>Next</button>
-            ) : (
-              <button onClick={handleSubmit}>Submit</button>
+    <>
+      <div className="question-paper-container">
+        <header className="test-header">
+          <div className="flex justify-between">
+            <h1>{exam.title}</h1>
+            {intervalRef.current && (
+              <img
+                onClick={() => {
+                  const confirm = window.confirm(
+                    "Are you sure you want to stop the exam?"
+                  );
+                  if (confirm) {
+                    stopExam();
+                    navigate("/exams");
+                  }
+                }}
+                className="h-9 cursor-pointer"
+                src="/stop.png"
+                alt="Stop"
+              />
             )}
           </div>
-        </div>
-      ) : (
-        <div className="results-section">
-          <h2>Test Results</h2>
-          <div className="performance-summary">
-            <h3>Overall Performance</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>Percentage</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Correct answers</td>
-                  <td>{score}%</td>
-                </tr>
-                <tr>
-                  <td>Wrong answers</td>
-                  <td>{100 - score}%</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="test-meta">
+            <span>
+              Time: {formatTime(timeLeft)} / {formatTime(exam.duration * 60)}
+            </span>
+            <span>Task: {questions.length}</span>
           </div>
-          <div className="progress-section">
-            <h3>Your Progress</h3>
-            <div className="progress-item">
-              <h4>Test Attempts Summary</h4>
-              <p>
-                {totalGivenExams}{" "}
-                {totalGivenExams === 1 ? "test has" : "tests have"} been
-                attempted so far.
-              </p>
+        </header>
+
+        {!submitted ? (
+          <div className="question-section">
+            <div className="question-progress">
+              Question {currentQuestion + 1} of {questions.length}
             </div>
-            <div className="total-attempts">
-              <div className="score-display">
-                <div className="overall-score">
-                  Overall Score: {totalScore}%
+            <div className="question-text">
+              {questions[currentQuestion].text}
+            </div>
+            <div className="options-container">
+              {questions[currentQuestion].options.map((option, index) => (
+                <div
+                  key={index}
+                  className={`option ${
+                    selectedAnswers[questions[currentQuestion]._id] ===
+                    questions[currentQuestion].options.indexOf(option)
+                      ? "selected"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    handleAnswerSelect(
+                      questions[currentQuestion]._id,
+                      questions[currentQuestion].options.indexOf(option)
+                    )
+                  }
+                >
+                  {option}
                 </div>
-                <div className="accuracy">Accuracy: {totalAccuracy}%</div>
+              ))}
+            </div>
+            <div className="navigation-buttons">
+              <button
+                onClick={handlePrevQuestion}
+                disabled={currentQuestion === 0}
+              >
+                Previous
+              </button>
+              {currentQuestion < questions.length - 1 ? (
+                <button onClick={handleNextQuestion}>Next</button>
+              ) : (
+                <button onClick={handleSubmit}>Submit</button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="results-section">
+            <h2>Test Results</h2>
+            <div className="performance-summary">
+              <h3>Overall Performance</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Percentage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Correct answers</td>
+                    <td>{score}%</td>
+                  </tr>
+                  <tr>
+                    <td>Wrong answers</td>
+                    <td>{100 - score}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="progress-section">
+              <h3>Your Progress</h3>
+              <div className="progress-item">
+                <h4>Test Attempts Summary</h4>
+                <p>
+                  {totalGivenExams}{" "}
+                  {totalGivenExams === 1 ? "test has" : "tests have"} been
+                  attempted so far.
+                </p>
+              </div>
+              <div className="total-attempts">
+                <div className="score-display">
+                  <div className="overall-score">
+                    Overall Score: {totalScore}%
+                  </div>
+                  <div className="accuracy">Accuracy: {totalAccuracy}%</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-      {/* <div className="p-4 max-w-3xl mx-auto">
-        <video
-          ref={videoRef}
-          playsInline
-          muted
-          width={"640"}
-          height={"480"}
-          className="border rounded local-video mx-auto"
-        ></video>
-      </div> */}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

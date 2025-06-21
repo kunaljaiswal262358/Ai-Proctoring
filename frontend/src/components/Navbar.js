@@ -55,22 +55,21 @@ const Navbar = ({ onShowAuthPopup, user, doLogout }) => {
         >
           {user && (
             <>
-              <Link to={"/dashboard"} className="nav-link">
+              <Link to={"/"} className="nav-link">
+                Home
+              </Link>
+              <Link to={`${user?.isAdmin ? "/admin/exams" : "/dashboard"}`} className="nav-link">
                 Dashboard
               </Link>
-
-              <Link href="#" className="nav-link">
+              <Link to={`${user?.isAdmin ? "/admin/exams" : "/exams"}`} className="nav-link">
                 Exams
               </Link>
-              <Link href="#" className="nav-link">
-                Courses
-              </Link>
-              <Link href="#" className="nav-link">
+              {/* <Link className="nav-link">
                 Workbook
               </Link>
-              <Link href="#" className="nav-link">
+              <Link className="nav-link">
                 Community
-              </Link>
+              </Link> */}
             </>
           )}
           <div className="flex items-center space-x-4">

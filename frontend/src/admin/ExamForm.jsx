@@ -1,10 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 export const ExamForm = ({
   newExam,
   setNewExam,
   questions,
   handleCreateExam,
   handleEditExam,
-  setActiveTab,
   setShowAddQuestionModal,
   handleAddQuestionToExam,
   handleRemoveQuestionFromExam,
@@ -12,6 +13,7 @@ export const ExamForm = ({
   update,
   resetExamForm,
 }) => {
+  const navigate = useNavigate()
 
   const handleEdit = () => {
     const id = newExam._id;
@@ -203,13 +205,14 @@ export const ExamForm = ({
         <div className="flex justify-end space-x-3 pt-4">
           <button
             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-            onClick={resetExamForm}
+            onClick={() => {navigate("/admin/exams"); resetExamForm()}}
+            
           >
             Cancel
           </button>
           <button
             className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-            onClick={() => (update ? handleEdit() : handleCreateExam(newExam))}
+            onClick={() => {(update ? handleEdit() : handleCreateExam(newExam)); navigate("/admin/exams"); }}
             disabled={!newExam.title || newExam.questions.length < 2}
           >
             {update ? "Update Exam" : "Create Exam"}

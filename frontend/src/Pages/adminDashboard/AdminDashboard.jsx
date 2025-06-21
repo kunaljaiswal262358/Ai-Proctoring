@@ -6,6 +6,8 @@ import { QuestionsList } from "../../admin/QuestionList";
 import { QuestionFormModal } from "../../admin/QuestionFormModel";
 import { StatsPanel } from "../../admin/StatsPanel";
 import axios from "axios";
+import { Route, Routes } from "react-router-dom";
+import { AdminLayout } from "../../admin/AdminLayout";
 
 const AdminDashboard = () => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -166,8 +168,11 @@ const AdminDashboard = () => {
           createdAt: new Date().toISOString(),
         },
       ]);
-      const {data: newExam} = await axios.post(process.env.REACT_APP_BACKEND_API + "/exams", exam);
-      setExams([...copy, newExam])
+      const { data: newExam } = await axios.post(
+        process.env.REACT_APP_BACKEND_API + "/exams",
+        exam
+      );
+      setExams([...copy, newExam]);
     } catch (err) {
       setExams(copy);
       console.log(err);
@@ -268,67 +273,53 @@ const AdminDashboard = () => {
   }, [mobileSidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-4 flex flex-col md:flex-row">
-        <Sidebar
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          questions={questions}
-          exams={exams}
-          mobileSidebarOpen={mobileSidebarOpen}
-          setMobileSidebarOpen={setMobileSidebarOpen}
-        />
+    <>
+      <Routes>
+        <Route element={<AdminLayout exams={exams} questions={questions} />}>
+          <Route
+            path="exams"
+            element={
+              <ExamsList
+                exams={exams}
+                handleDeleteExam={handleDeleteExam}
+                setNewExam={setNewExam}
+                setUpdate={setUpdate}
+              />
+            }
+          />
+          <Route
+            path="create-exam"
+            element={
+              <ExamForm
+                newExam={newExam}
+                setNewExam={setNewExam}
+                questions={questions}
+                handleCreateExam={handleCreateExam}
+                handleEditExam={handleEditExam}
+                setShowAddQuestionModal={setShowAddQuestionModal}
+                handleAddQuestionToExam={handleAddQuestionToExam}
+                handleRemoveQuestionFromExam={handleRemoveQuestionFromExam}
+                getQuestionById={getQuestionById}
+                update={update}
+                resetExamForm={resetExamForm}
+              />
+            }
+          />
 
-        <main className="flex-1 mt-4 md:mt-0">
-          <div
-            onClick={() => setMobileSidebarOpen(true)}
-            className="md:hidden text-2xl mb-2 ml-2 opacity-85"
-          >
-            <i class="fa-solid fa-chart-bar"></i>
-          </div>
-          {activeTab === "exams" && (
-            <ExamsList
-              exams={exams}
-              setActiveTab={setActiveTab}
-              handleDeleteExam={handleDeleteExam}
-              setNewExam={setNewExam}
-              selectActiveTab={setActiveTab}
-              setUpdate={setUpdate}
-            />
-          )}
-
-          {activeTab === "create-exam" && (
-            <ExamForm
-              newExam={newExam}
-              setNewExam={setNewExam}
-              questions={questions}
-              handleCreateExam={handleCreateExam}
-              handleEditExam={handleEditExam}
-              setActiveTab={setActiveTab}
-              setShowAddQuestionModal={setShowAddQuestionModal}
-              handleAddQuestionToExam={handleAddQuestionToExam}
-              handleRemoveQuestionFromExam={handleRemoveQuestionFromExam}
-              getQuestionById={getQuestionById}
-              update={update}
-              resetExamForm={resetExamForm}
-            />
-          )}
-
-          {activeTab === "questions" && (
-            <QuestionsList
-              questions={questions}
-              setActiveTab={setActiveTab}
-              setShowAddQuestionModal={setShowAddQuestionModal}
-              setNewQuestion={setNewQuestion}
-              setUpdate={setUpdate}
-              handleDeleteQuestion={handleDeleteQuestion}
-            />
-          )}
-
-          <StatsPanel questions={questions} exams={exams} />
-        </main>
-      </div>
-
+          <Route
+            path="questions"
+            element={
+              <QuestionsList
+                questions={questions}
+                setShowAddQuestionModal={setShowAddQuestionModal}
+                setNewQuestion={setNewQuestion}
+                setUpdate={setUpdate}
+                handleDeleteQuestion={handleDeleteQuestion}
+              />
+            }
+          />
+        </Route>
+      </Routes>
       <QuestionFormModal
         showAddQuestionModal={showAddQuestionModal}
         setShowAddQuestionModal={setShowAddQuestionModal}
@@ -341,7 +332,7 @@ const AdminDashboard = () => {
         update={update}
         resetQuestionForm={resetQuestionForm}
       />
-    </div>
+    </>
   );
 };
 

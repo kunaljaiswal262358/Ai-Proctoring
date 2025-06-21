@@ -57,7 +57,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home user={user} setShowAuthPopup={setShowAuthPopup} />} />
-          {admin && <Route path="/dashboard" element={<AdminDashboard />} />}
+          {admin && <Route path="/admin/*" element={<AdminDashboard />} />}
           {student && <Route path="/dashboard" element={<UserDashboard user={user} />} />}
           {student &&  <Route path="/*" element={<ExamRoutes user={user} />} />}
           <Route path="*" element={<NotFound />} />

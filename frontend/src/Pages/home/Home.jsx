@@ -16,7 +16,7 @@ const Home = ({ user, setShowAuthPopup }) => {
           </p>
           <div className="mt-8">
             <button
-              onClick={() => user ? navigate("/dashboard") : setShowAuthPopup(true)}
+              onClick={() => user ? navigate(`${user.isAdmin ? "/admin/exams" : "/dashboard"}`) : setShowAuthPopup(true)}
               className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-[#4299e1] hover:bg-[#52abf4]"
             >
               Request Demo

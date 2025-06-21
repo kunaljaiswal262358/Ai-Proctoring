@@ -1,14 +1,18 @@
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 export const Sidebar = ({
-  activeTab,
-  setActiveTab,
+  // activeTab,
+  // setActiveTab,
   questions,
   exams,
   mobileSidebarOpen,
   setMobileSidebarOpen,
 }) => {
+  const location = useLocation()
+  const navigate = useNavigate()
   return (
     <>
-      <aside
+      <nav
         className={`${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 fixed md:relative left-0 w-80 md:w-64 bg-white rounded-lg shadow-md p-4 mr-6 transform transition-transform duration-200 ease-in-out z-40 md:z-auto`}
@@ -24,23 +28,23 @@ export const Sidebar = ({
           <h2 className="text-lg font-semibold mb-2">Exam Management</h2>
           <ul className="space-y-2">
             {[
-              { id: "exams", label: "All Exams" },
-              { id: "create-exam", label: "Create New Exam" },
-              { id: "questions", label: "Question Bank" },
+              { href: "/admin/exams", label: "All Exams" },
+              { href: "/admin/create-exam", label: "Create New Exam" },
+              { href: "/admin/questions", label: "Question Bank" },
             ].map((tab) => (
               <li
-                key={tab.id}
+                key={tab.href}
                 className={`p-2 rounded ${
-                  activeTab === tab.id
+                  location.pathname === tab.href
                     ? "bg-blue-100 text-blue-600"
                     : "hover:bg-gray-100"
                 } cursor-pointer`}
                 onClick={() => {
-                  setActiveTab(tab.id);
+                  navigate(tab.href)
                   setMobileSidebarOpen(false);
                 }}
               >
-                {tab.label}
+                <Link >{tab.label}</Link>
               </li>
             ))}
           </ul>
@@ -70,7 +74,7 @@ export const Sidebar = ({
           </div>
           <p className="text-sm text-gray-600">45% completion rate</p>
         </div>
-      </aside>
+      </nav>
     </>
   );
 };

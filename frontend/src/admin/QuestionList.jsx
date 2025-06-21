@@ -1,4 +1,4 @@
-export const QuestionsList = ({ questions, setActiveTab, setShowAddQuestionModal, setNewQuestion, setUpdate, handleDeleteQuestion }) => {
+export const QuestionsList = ({ questions, setShowAddQuestionModal, setNewQuestion, setUpdate, handleDeleteQuestion }) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
@@ -6,7 +6,6 @@ export const QuestionsList = ({ questions, setActiveTab, setShowAddQuestionModal
         <button 
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           onClick={() => {
-            // setActiveTab('create-exam');
             setShowAddQuestionModal(true);
           }}
         >

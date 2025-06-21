@@ -38,7 +38,7 @@ router.post("/login", async (req, res) => {
   if(!password) return res.status(400).send({password: "Password is not provided."})
 
   let user = await User.findOne({email}).populate("report");
-  if(!user) return res.status(400).send({email: "Email is invalid"});
+  if(!user) return res.status(400).send({email: "Email is not registered."});
 
   const isMatched = await bcrypt.compare(password, user.password);
   if(!isMatched) return res.status(400).send({password: "Password mismatched."});
