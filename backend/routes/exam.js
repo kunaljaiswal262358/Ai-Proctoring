@@ -1,9 +1,10 @@
 const express = require("express");
 const { Exam, validateExam } = require("../model/exam");
+const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   let exam = req.body;
   const errors = validateExam(exam);
   if (errors) return res.status(400).send(errors);
@@ -23,13 +24,13 @@ router.get("/:id", async (req, res) => {
   const id = req.params.id;
 
   const exam = await Exam.findById(id).populate("questions");
-  console.log(exam)
-  if(!exam) return res.status(400).send("Exam with given id is not found")
+  console.log(exam);
+  if (!exam) return res.status(400).send("Exam with given id is not found");
 
   res.send(exam);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, async (req, res) => {
   let exam = req.body;
   const errors = validateExam(exam);
   if (errors) res.status(400).send(errors);
@@ -41,10 +42,11 @@ router.put("/:id", async (req, res) => {
   res.send(exam);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   const id = req.params.id;
   const deletedExam = await Exam.findByIdAndDelete(id);
-  if (!deletedExam) return res.status(400).send("Exam is not found with given id");
+  if (!deletedExam)
+    return res.status(400).send("Exam is not found with given id");
 
   res.send(deletedExam);
 });

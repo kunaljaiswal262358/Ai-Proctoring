@@ -1,10 +1,11 @@
 const express = require("express");
 const { Question, validateQuestion } = require("../model/question");
-const { Exam } = require('../model/exam.js')
+const { Exam } = require('../model/exam.js');
+const authenticate = require("../middleware/authenticate.js");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   let question = req.body;
   const errors = validateQuestion(question);
   if (errors) return res.status(400).send(errors);
@@ -27,7 +28,7 @@ router.get("/", async (req, res) => {
   res.send(questions);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, async (req, res) => {
   let question = req.body;
   const errors = validateQuestion(question);
   if (errors) res.status(400).send(errors);
@@ -39,7 +40,7 @@ router.put("/:id", async (req, res) => {
   res.send(question);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   const id = req.params.id;
   await Exam.updateMany({}, { $pull: { questions: id } });
 

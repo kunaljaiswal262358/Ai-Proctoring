@@ -5,10 +5,11 @@ const {
   validateGivenExam,
 } = require("../model/userReport");
 const { User } = require("../model/user");
+const authenticate = require("../middleware/authenticate");
 
 const router = express();
 
-router.put("/:reportId", async (req, res) => {
+router.put("/:reportId", authenticate, async (req, res) => {
   let report = req.body;
   const errors = validateUserReport(report);
   if (errors) return res.status(400).send(errors);
@@ -20,7 +21,7 @@ router.put("/:reportId", async (req, res) => {
   res.send(report);
 });
 
-router.put("/givenExam/:userId", async (req, res) => {
+router.put("/givenExam/:userId", authenticate, async (req, res) => {
   let exam = req.body;
 
   const errors = validateGivenExam(exam);

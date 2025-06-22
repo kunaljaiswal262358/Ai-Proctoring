@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
 import jwt from "jwt-client";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import UserDashboard from "./Pages/Dashboard.jsx";
-// import Navbar from "./components/Navbar.jsx";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
-import Notification from "./components/Notification.jsx";
-import AuthPopup from "./components/AuthPopup.jsx";
-import Home from "./Pages/Home.jsx";
+import Notification from "./components/Notification";
+import AuthPopup from "./components/AuthPopup";
+import AdminDashboard from "./Pages/AdminDashboard.jsx";
 import NotFound from "./components/NotFound.jsx";
-import Exams from "./Pages/Exams.jsx";
-import QuestionPaper from "./Pages/Questions.jsx";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./App.css";
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [admin, setAdmin] = useState(null);
   const [showAuthPopup, setShowAuthPopup] = useState(false);
-  const [currentExam, setCurrentExam] = useState(null);
 
   const openAuthPage = () => {
     setShowAuthPopup(true);
@@ -31,36 +26,29 @@ function App() {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    setAdmin(null);
   };
 
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
     if (!token) return;
     const data = jwt.read(token).claim;
-    setUser(data);
+    setAdmin(data);
   }, []);
 
   return (
     <>
       <Notification />
-      {showAuthPopup && <AuthPopup onClose={closeAuthPage} setUser={setUser} />}
       <BrowserRouter>
         <Navbar
-          exam={currentExam}
           onShowAuthPopup={openAuthPage}
-          user={user}
+          admin ={admin}
           doLogout={() => handleLogout()}
         />
 
         <Routes>
-          <Route
-            path="/"
-            element={<Home user={user} setShowAuthPopup={setShowAuthPopup} />}
-          />
-          <Route path="/dashboard" element={<UserDashboard user={user} />} />
-          <Route path="/exams" element={<Exams />} />
-          <Route path="/exam/:examId" element={<QuestionPaper onStart={(exam) => setCurrentExam(exam)} onStop={() => setCurrentExam(null)} user={user} />} />
+          <Route path="/" element={admin ? <Navigate to={"/admin/exams"} /> : <AuthPopup setUser={setAdmin} />} />
+          {admin && <Route path="/admin/*" element={<AdminDashboard />} />}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

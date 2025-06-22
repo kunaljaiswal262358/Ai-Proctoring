@@ -9,8 +9,8 @@ router.post("/login", async (req, res) => {
   if (!password)
     return res.status(400).send({ password: "Password is not provided." });
 
-  const isMatched = process.env.ADMIN_ID === email && process.env.ADMIN_PASSWORD === password;
-  if (!isMatched) return res.status(400).send("Either Email or Password is Invalid.");
+  if(!(process.env.ADMIN_ID === email)) return res.status(400).send({email: "Email is incorrect."});
+  if (!(process.env.ADMIN_PASSWORD === password)) return res.status(400).send({password: "Password is incorrecct."});
 
   const token = generateToken({email});
   res.send(token);
