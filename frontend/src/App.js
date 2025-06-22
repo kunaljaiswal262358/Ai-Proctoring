@@ -35,10 +35,14 @@ function App() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("auth-token");
-    if (!token) return;
-    const data = jwt.read(token).claim;
-    setUser(data);
+    try {
+      const token = localStorage.getItem("auth-token");
+      if (!token) return;
+      const data = jwt.read(token).claim;
+      setUser(data);
+    } catch (err) {
+      console.log("token changed");
+    }
   }, []);
 
   return (
@@ -60,7 +64,16 @@ function App() {
           />
           <Route path="/dashboard" element={<UserDashboard user={user} />} />
           <Route path="/exams" element={<Exams />} />
-          <Route path="/exam/:examId" element={<QuestionPaper onStart={(exam) => setCurrentExam(exam)} onStop={() => setCurrentExam(null)} user={user} />} />
+          <Route
+            path="/exam/:examId"
+            element={
+              <QuestionPaper
+                onStart={(exam) => setCurrentExam(exam)}
+                onStop={() => setCurrentExam(null)}
+                user={user}
+              />
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

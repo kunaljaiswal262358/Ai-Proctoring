@@ -4,10 +4,11 @@ import {
   loadModelAndCamera,
   stopCameraAndProctoring,
 } from "../ml/proctoring.js";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance.js";
 import { getAccuracy, getScore } from "../utils/math.js";
 import ExamLoading from "../components/ExamLoading.jsx";
 import ProctoringSetup from "../components/ProctoringSetup.jsx";
+import notification from "../utils/notification.js";
 
 const QuestionPaper = ({ onStart, onStop, user }) => {
   const [exam, setExam] = useState(null);
@@ -86,10 +87,8 @@ const QuestionPaper = ({ onStart, onStop, user }) => {
       questionsRef.current.forEach((question) => {
         correctAnswerSheet[question._id] = question.correctAnswer;
       });
-      const { data: report } = await axios.put(
-        process.env.REACT_APP_BACKEND_API +
-          "/userReports/givenExam/" +
-          user._id,
+      const { data: report } = await axiosInstance.put(
+        "/userReports/givenExam/" + user._id,
         {
           exam: examId,
           correctAnswerSheet,
@@ -103,6 +102,7 @@ const QuestionPaper = ({ onStart, onStop, user }) => {
       setTotalScore(getScore(exams));
     } catch (err) {
       console.log(err);
+      notification(err.response.data);
     }
   };
 
@@ -123,7 +123,7 @@ const QuestionPaper = ({ onStart, onStop, user }) => {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
     timeLeftRef.current = 0;
-    setTimeLeft(0)
+    setTimeLeft(0);
     localStorage.removeItem("ongoing");
     stopCameraAndProctoring();
     onStop();
@@ -149,7 +149,7 @@ const QuestionPaper = ({ onStart, onStop, user }) => {
       timeLeft = getRemainingTime(ongoing);
     } else {
       const started = await startProctoring(stopExam);
-      if(!started) return;
+      if (!started) return;
     }
 
     setStarted(true);
@@ -158,7 +158,7 @@ const QuestionPaper = ({ onStart, onStop, user }) => {
 
   const fetchExam = async () => {
     try {
-      const result = await axios.get(
+      const result = await axiosInstance.get(
         process.env.REACT_APP_BACKEND_API + "/exams/" + examId
       );
       const exam = result.data;
