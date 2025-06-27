@@ -29,7 +29,7 @@ An AI-powered online exam platform built using **React**, **Node.js**, and **Ten
 
 | Student Interface | Admin Panel |
 |-------------------|-------------|
-| ![Student](student-view.png) | ![Admin](admin-panel.png) |
+| ![Student](frontend/public/student-view.png) | ![Admin](admin/public/admin-panel.png) |
 
 ## 📂 Folder Structure
 
