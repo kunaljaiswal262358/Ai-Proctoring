@@ -23,7 +23,7 @@ An AI-powered online exam platform built using **React**, **Node.js**, and **Ten
 | Frontend      | Backend     | AI/ML               | Others               |
 |---------------|-------------|---------------------|----------------------|
 | React.js      | Node.js     | TensorFlow.js       | Express.js, MongoDB  |
-| Tailwind CSS  | MongoDB     | Face & head tracking| Socket.io, JWT       |
+| Tailwind CSS  | MongoDB     | Face & head tracking| JWT       |
 
 ## 📸 Screenshots
 
